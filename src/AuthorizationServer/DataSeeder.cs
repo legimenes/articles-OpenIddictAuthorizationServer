@@ -26,10 +26,7 @@ public class DataSeeder(IServiceProvider serviceProvider) : IHostedService
             Permissions =
             {
                 OpenIddictConstants.Permissions.Endpoints.Token,
-                OpenIddictConstants.Permissions.Endpoints.Introspection,
-                OpenIddictConstants.Permissions.Endpoints.Revocation,
                 OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
-                OpenIddictConstants.Permissions.GrantTypes.RefreshToken,
 
                 OpenIddictConstants.Permissions.Prefixes.Scope + "test_scope"
             }
