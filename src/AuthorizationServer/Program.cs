@@ -19,6 +19,8 @@ var app = builder.Build();
 
     app.UseHttpsRedirection();
 
+    app.UseAuthentication();
+
     app.MapAuthorizationEndpoints();
 
     app.Run();

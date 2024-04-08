@@ -15,12 +15,18 @@ public static class OpenIddictExtensions
             .AddServer(options =>
             {
                 options.AllowClientCredentialsFlow();
-                options.SetTokenEndpointUris("connect/token");
-                options.AddDevelopmentEncryptionCertificate()
+                options.AllowAuthorizationCodeFlow()
+                    .RequireProofKeyForCodeExchange();
+                options
+                    .SetTokenEndpointUris("connect/token")
+                    .SetAuthorizationEndpointUris("connect/authorize");
+                options
+                    .AddDevelopmentEncryptionCertificate()
                     .AddDevelopmentSigningCertificate();
                 options.DisableAccessTokenEncryption();
                 options.UseAspNetCore()
-                    .EnableTokenEndpointPassthrough();
+                    .EnableTokenEndpointPassthrough()
+                    .EnableAuthorizationEndpointPassthrough();
             });
 
         builder.Services

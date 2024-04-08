@@ -23,10 +23,16 @@ public class DataSeeder(IServiceProvider serviceProvider) : IHostedService
             ClientId = "test_client",
             ClientSecret = "test_secret",
             ClientType = OpenIddictConstants.ClientTypes.Confidential,
+            DisplayName = "App Test",
+            RedirectUris = { new Uri("https://localhost:4001/callback") },
             Permissions =
             {
                 OpenIddictConstants.Permissions.Endpoints.Token,
+                OpenIddictConstants.Permissions.Endpoints.Authorization,
                 OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
+                OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
+
+                OpenIddictConstants.Permissions.ResponseTypes.Code,
 
                 OpenIddictConstants.Permissions.Prefixes.Scope + "test_scope"
             }
