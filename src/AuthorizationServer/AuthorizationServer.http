@@ -6,5 +6,12 @@ Content-Type: application/x-www-form-urlencoded
 grant_type=client_credentials&client_id=test_client&client_secret=test_secret&scope=test_scope
 ###
 
-GET {{AuthorizationServer_HostAddress}}/connect/authorize?response_type=code&code_challenge=bX9uzGJQf7Oy1gn7sCMkHT6B_yy-L6JT5xWivrWXZVE&code_challenge_method=S256&client_id=test_client&redirect_uri=https://localhost:4001/callback
+GET {{AuthorizationServer_HostAddress}}/connect/authorize?response_type=code&code_challenge=ZVqKt8ufATFkCm7F63hnXy4YyT1bBfrxqSCoVSgUEZM&code_challenge_method=S256&client_id=test_client&redirect_uri=https://localhost:4001/callback&prompt=
+#&prompt=login
+###
+
+POST {{AuthorizationServer_HostAddress}}/connect/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code&client_id=test_client&client_secret=test_secret&code_verifier=AVA~cbYg_UDgPYrJNJX.kMotv0x.z8nY~C23XzWq4DxEUu0cw9rWk6SwlgHgihmBoPN4.WKV0H1ui6TTL3vCWC0jyv7fYlAef3Z-y-7rgC6~0m9bb06x8FEO24LJArH4&&redirect_uri=https://localhost:4001/callback&code=usw0m9bNET969I0LeT8X1bTJ0pi6BYh1QztKUcl_O6w
 ###

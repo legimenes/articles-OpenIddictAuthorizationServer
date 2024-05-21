@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AuthorizationServer.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuthorizationServer.Extensions;
 
@@ -10,7 +12,7 @@ public static class OpenIddictExtensions
             .AddOpenIddict()
             .AddCore(options =>
             {
-                options.UseEntityFrameworkCore().UseDbContext<DbContext>();
+                options.UseEntityFrameworkCore().UseDbContext<ApplicationDbContext>();
             })
             .AddServer(options =>
             {
@@ -30,11 +32,16 @@ public static class OpenIddictExtensions
             });
 
         builder.Services
-            .AddDbContext<DbContext>(options =>
+            .AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseInMemoryDatabase(nameof(DbContext));
+                options.UseInMemoryDatabase(nameof(ApplicationDbContext));
                 options.UseOpenIddict();
             });
+
+        builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders()
+            .AddDefaultUI();
 
         builder.Services.AddHostedService<DataSeeder>();
 

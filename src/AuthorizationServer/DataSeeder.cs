@@ -1,4 +1,5 @@
-﻿using OpenIddict.Abstractions;
+﻿using Microsoft.AspNetCore.Identity;
+using OpenIddict.Abstractions;
 
 namespace AuthorizationServer;
 
@@ -8,13 +9,14 @@ public class DataSeeder(IServiceProvider serviceProvider) : IHostedService
     {
         using var serviceScope = serviceProvider.CreateScope();
 
-        await PopulateScopes(serviceScope, cancellationToken);
-        await PopulateInternalApps(serviceScope, cancellationToken);
+        await PopulateScopesAsync(serviceScope, cancellationToken);
+        await PopulateInternalAppsAsync(serviceScope, cancellationToken);
+        await PopulateUsersAsync(serviceScope);
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
-    static async ValueTask PopulateInternalApps(IServiceScope serviceScope, CancellationToken cancellationToken)
+    static async ValueTask PopulateInternalAppsAsync(IServiceScope serviceScope, CancellationToken cancellationToken)
     {
         IOpenIddictApplicationManager appManager = serviceScope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
@@ -38,7 +40,7 @@ public class DataSeeder(IServiceProvider serviceProvider) : IHostedService
             }
         };
 
-        var client = await appManager.FindByClientIdAsync(appDescriptor.ClientId, cancellationToken);
+        object? client = await appManager.FindByClientIdAsync(appDescriptor.ClientId, cancellationToken);
         if (client == null)
         {
             await appManager.CreateAsync(appDescriptor, cancellationToken);
@@ -49,17 +51,17 @@ public class DataSeeder(IServiceProvider serviceProvider) : IHostedService
         }
     }
 
-    static async ValueTask PopulateScopes(IServiceScope serviceScope, CancellationToken cancellationToken)
+    static async ValueTask PopulateScopesAsync(IServiceScope serviceScope, CancellationToken cancellationToken)
     {
-        var scopeManager = serviceScope.ServiceProvider.GetRequiredService<IOpenIddictScopeManager>();
+        IOpenIddictScopeManager scopeManager = serviceScope.ServiceProvider.GetRequiredService<IOpenIddictScopeManager>();
 
-        var scopeDescriptor = new OpenIddictScopeDescriptor
+        OpenIddictScopeDescriptor scopeDescriptor = new OpenIddictScopeDescriptor
         {
             Name = "test_scope",
             Resources = { "test_resource" }
         };
 
-        var scopeInstance = await scopeManager.FindByNameAsync(scopeDescriptor.Name, cancellationToken);
+        object? scopeInstance = await scopeManager.FindByNameAsync(scopeDescriptor.Name, cancellationToken);
         if (scopeInstance == null)
         {
             await scopeManager.CreateAsync(scopeDescriptor, cancellationToken);
@@ -68,5 +70,13 @@ public class DataSeeder(IServiceProvider serviceProvider) : IHostedService
         {
             await scopeManager.UpdateAsync(scopeInstance, scopeDescriptor, cancellationToken);
         }
+    }
+
+    static async ValueTask PopulateUsersAsync(IServiceScope serviceScope)
+    {
+        UserManager<IdentityUser> userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+        IdentityUser user = new("john.doe@email.com");
+        await userManager.CreateAsync(user, "Pass@word1");
     }
 }
