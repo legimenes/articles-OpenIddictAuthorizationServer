@@ -33,6 +33,7 @@ public class DataSeeder(IServiceProvider serviceProvider) : IHostedService
                 OpenIddictConstants.Permissions.Endpoints.Authorization,
                 OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
                 OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
+                OpenIddictConstants.Permissions.GrantTypes.RefreshToken,
 
                 OpenIddictConstants.Permissions.ResponseTypes.Code,
 
