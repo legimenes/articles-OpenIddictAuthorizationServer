@@ -1,7 +1,6 @@
 ﻿using AuthorizationServer.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using OpenIddict.Abstractions;
 
 namespace AuthorizationServer.Extensions;
 
@@ -23,7 +22,9 @@ public static class OpenIddictExtensions
                 options.AllowRefreshTokenFlow();
                 options
                     .SetTokenEndpointUris("connect/token")
-                    .SetAuthorizationEndpointUris("connect/authorize");
+                    .SetAuthorizationEndpointUris("connect/authorize")
+                    .SetIntrospectionEndpointUris("/connect/introspect")
+                    .SetRevocationEndpointUris("/connect/revocation");
                 options
                     .AddDevelopmentEncryptionCertificate()
                     .AddDevelopmentSigningCertificate();
